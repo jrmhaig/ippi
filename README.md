@@ -22,7 +22,7 @@ that when it is set to run on boot (see below) it can be controlled by simply
 creating or removing this file. Create this file with:
 
     $ mkdir /home/pi/ippi
-    $ touch /home/pi/ippi
+    $ touch /home/pi/ippi/go
 
 Copy ippi.py into /home/pi/ippi/ and execute it as:
 

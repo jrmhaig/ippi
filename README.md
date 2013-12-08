@@ -60,11 +60,22 @@ Modify /etc/rc.local to look like:
     #
     # By default this script does nothing.
     
+    # Try to find the IP address
+    # Try 10 time to take account of slow DHCP
+    N=0
+    while [ ! "$_IP" -a $N -lt 10 ]
+    do
+      _IP=$(hostname -I) || true
+      N=$((N+1))
+      sleep 1
+    done
+
     # Print the IP address
-    _IP=$(hostname -I) || true
     if [ "$_IP" ]; then
       printf "My IP address is %s\n" "$_IP"
     fi
+
+    # Use the PiFace to display the IP address
     /home/pi/ippi/ippi.py $_IP &
     
     exit 0

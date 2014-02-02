@@ -4,11 +4,6 @@ import pifacedigitalio
 import time
 import sys
 
-# This file determines whether or not to run the script
-# If it does not exist at the start then the script exits immediately
-# If it is deleted then the script exists the next time a button is pressed
-go_file = '/home/pi/ippi/go'
-
 # Start piface
 try:
     pfd = pifacedigitalio.PiFaceDigital()
@@ -39,28 +34,17 @@ def fail():
         alert(1)
         time.sleep(2)
 
-def check_file():
-    """Test for existance of the 'go' file"""
-    try:
-        open(go_file)
-        return True
-    except IOError:
-        return False
-
-def pin_number(mask):
-    """Determine which pin has been pressed by the mask
-
-    If multiple buttons are pressed return the highest pin
-
-    """
+def get_pins(mask):
+    """Determine which pins have been pressed by the mask"""
+    pins = []
     for i in range(7, -1, -1):
         if mask >= 2**i:
-            return i
+            pins.append(i)
+            mask = mask - 2**i
+    return pins
 
-    return None
-
-# Only carry on if the 'go' file exists
-if not check_file():
+# Check to see if a button is pressed. If not, exit.
+if pfd.input_port.value == 0:
     sys.exit(0)
 
 # The script must be called as:
@@ -90,21 +74,28 @@ alert(3)
 # Show the first byte
 showNumber(bytes[0])
 
-while check_file():
+while True:
     # Wait until the button has been released (since last time)
     event = pfd.input_port.value
     while event != 0:
         event = pfd.input_port.value
+        if len(get_pins(event)) > 1:
+            # Press two buttons to end
+            break
         time.sleep(0.001)
 
     # Wait for a button to be pressed
     while event == 0:
         event = pfd.input_port.value
 
-    print(event)
+    pins = get_pins(event)
+    # If more than one button pressed then exit
+    if len(pins) > 1:
+        break
+
     # Display the byte corresponding to the button pressed
-    showNumber(bytes[pin_number(event)])
+    showNumber(bytes[pins[0]])
 
 # Clean up
 showNumber(0)
-deinit()
+del pfd

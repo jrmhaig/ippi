@@ -17,12 +17,9 @@ buttons.
 Running ippi
 ------------
 
-ippi will only run if it finds a file called /home/pi/ippi/go. This is done so
-that when it is set to run on boot (see below) it can be controlled by simply
-creating or removing this file. Create this file with:
-
-    $ mkdir /home/pi/ippi
-    $ touch /home/pi/ippi/go
+ippi will only run if an input is on at the start - i.e., at least one of the
+buttons is pressed. This is so that it can be used as required on boot (see
+below).
 
 Copy ippi.py into /home/pi/ippi/ and execute it as:
 
@@ -34,10 +31,7 @@ second button, S2, and the LEDs will change to display the second number (3)
 in binary (00000011). Likewise, S3 and S4 will display the third and fourth
 numbers respectively.
 
-To stop ippi (without pressing Ctrl-C) delete /home/pi/ippi/go and then press
-any of the four buttons:
-
-    $ rm /home/pi/ippi/go
+To exit ippi (without pressing Ctrl-C) press two buttons simultaneously.
 
 If there is an error then all eight lights will flash slowly until the ippi is
 killed with Ctrl-C.
@@ -80,8 +74,8 @@ Modify /etc/rc.local to look like:
     
     exit 0
 
-When you want ippi to run on boot, create the file /home/pi/ippi/go. This can
-be done while the SD card is inserted into another computer.
+When you want ippi to run on boot, hold down any of the buttons during boot up
+until the LEDs flash three times.
 
 Some useful numbers in binary
 -----------------------------
@@ -132,3 +126,10 @@ If the first byte is 192 then the second byte should be 168:
 | 168     | 10101000 |
 
 The remaining two bytes may have any value.
+
+To do
+-----
+
+* Put all the functions in a module to tidy up the code.
+ * Then create a new module for PiFace Control and Display. (Other boards?)
+* Detect IP address rather than require it to be passed in as an argument.

@@ -132,11 +132,3 @@ If the first byte is 192 then the second byte should be 168:
 | 168     | 10101000 |
 
 The remaining two bytes may have any value.
-
-To do
------
-
-At the moment, the PiFace python modules need to be already installed on the
-SD card. If it were possible to include a minimal self-contained library with
-ippi then it could be used on a newly installed SD card without first having
-to boot it up and install anything extra.

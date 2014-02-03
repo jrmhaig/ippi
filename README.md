@@ -70,12 +70,39 @@ Modify /etc/rc.local to look like:
     fi
 
     # Use the PiFace to display the IP address
-    /home/pi/ippi/ippi.py $_IP &
+    python3 /home/pi/ippi/ippi.py $_IP &
     
     exit 0
 
 When you want ippi to run on boot, hold down any of the buttons during boot up
 until the LEDs flash three times.
+
+Install on new image
+--------------------
+
+If you have a new SD card and want to use ippi you will need to set it up while it is mounted on another computer. A relatively recent version of Raspbian has all the necessary python modules already installed and so the set up is relatively straightforward.
+
+Find the root partition (usually the second partition) and copy ippi.py to:
+
+    <root partition mount>/home/pi/ippi/ippi.py
+
+You will need to create the directory `<root partition mount>/home/pi/ippi` first. Then find
+
+    <root partition mount>/etc/rc.local
+
+and modify it as shown in the "Run ippi on boot" section above.
+
+Finally, edit the file:
+
+    <root partition mount>/modprobe.d/raspi-blacklist.conf
+
+and remove the line:
+
+    blacklist spi-bcm2708
+
+This will enable the SPI kernel module, which is required for the PiFace Digital.
+
+Reboot and hold one of the PiFace buttons pressed until the LEDs flash.
 
 Some useful numbers in binary
 -----------------------------
